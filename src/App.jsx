@@ -1,5 +1,13 @@
 import './App.css'
-import { FaJava, FaQuestion } from 'react-icons/fa6'
+import {
+  FaJava,
+  FaDatabase,
+  FaRobot,
+  FaDiagramProject,
+  FaClipboardCheck,
+  FaFileCode,
+  FaChartLine,
+} from 'react-icons/fa6'
 import {
   SiPython,
   SiSpring,
@@ -16,6 +24,7 @@ import {
   SiJunit5,
   SiApachejmeter,
   SiGrafana,
+  SiOracle,
   SiDocker,
   SiGit
 } from 'react-icons/si'
@@ -36,7 +45,7 @@ function App() {
         { label: 'Quarkus', icon: <SiQuarkus /> },
         { label: 'FastAPI', icon: <SiFastapi /> },
         { label: 'Hibernate', icon: <SiHibernate /> },
-        { label: 'MongoEngine', icon: <FaQuestion /> },
+        { label: 'MongoEngine', icon: <SiMongodb /> },
       ],
     },
     {
@@ -46,34 +55,27 @@ function App() {
         { label: 'PostgreSQL', icon: <SiPostgresql /> },
         { label: 'MongoDB', icon: <SiMongodb /> },
         { label: 'Cassandra', icon: <SiApachecassandra /> },
-        { label: 'Qdrant', icon: <FaQuestion /> },
+        { label: 'Qdrant', icon: <FaDatabase /> },
       ],
     },
     {
       category: 'AI Frameworks / Agents',
       skills: [
-        { label: 'Microsoft Autogen', icon: <FaQuestion /> },
-        { label: 'AG2', icon: <FaQuestion /> },
+        { label: 'Microsoft Autogen', icon: <FaRobot /> },
+        { label: 'AG2', icon: <FaRobot /> },
         { label: 'LangChain', icon: <SiLangchain /> },
-        { label: 'LangGraph', icon: <FaQuestion /> },
-        { label: 'Agno', icon: <FaQuestion /> },
-        { label: 'CrewAI', icon: <FaQuestion /> },
-        { label: 'Langfuse', icon: <FaQuestion /> },
-        { label: 'Promptflow', icon: <FaQuestion /> },
+        { label: 'LangGraph', icon: <FaDiagramProject /> },
+        { label: 'Agno', icon: <FaRobot /> },
+        { label: 'CrewAI', icon: <FaRobot /> },
+        { label: 'Langfuse', icon: <FaRobot /> },
+        { label: 'Promptflow', icon: <FaDiagramProject /> },
       ],
     },
     {
       category: 'AI Evaluation Frameworks',
       skills: [
-        { label: 'Microsoft Evaluation Framework', icon: <FaQuestion /> },
-        { label: 'Google Evaluation Framework', icon: <FaQuestion /> },
-      ],
-    },
-    {
-      category: 'AI Concepts',
-      skills: [
-        { label: 'LLM', icon: <FaQuestion /> },
-        { label: 'RAG', icon: <FaQuestion /> },
+        { label: 'Microsoft Evaluation Framework', icon: <FaClipboardCheck /> },
+        { label: 'Google Evaluation Framework', icon: <FaClipboardCheck /> },
       ],
     },
     {
@@ -86,8 +88,8 @@ function App() {
     {
       category: 'Data Serialization Formats',
       skills: [
-        { label: 'Avro', icon: <FaQuestion /> },
-        { label: 'ProtoBuf', icon: <FaQuestion /> },
+        { label: 'Avro', icon: <FaFileCode /> },
+        { label: 'ProtoBuf', icon: <FaFileCode /> },
       ],
     },
     {
@@ -101,8 +103,8 @@ function App() {
       category: 'Observability and Monitoring',
       skills: [
         { label: 'Grafana', icon: <SiGrafana /> },
-        { label: 'Scalyr', icon: <FaQuestion /> },
-        { label: 'Oracle Flight Recorder', icon: <FaQuestion /> },
+        { label: 'Scalyr', icon: <FaChartLine /> },
+        { label: 'Oracle Flight Recorder', icon: <SiOracle /> },
       ],
     },
     {
@@ -117,6 +119,15 @@ function App() {
   return (
     <div className="container">
       <h1>Jasvir Singh Dhillon</h1>
+      <div className="contact">
+        <a
+          href="https://www.linkedin.com/in/jasvir-singh-dhillon/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+      </div>
       {categorizedSkills.map((section) => (
         <div className="category-section" key={section.category}>
           <h2>{section.category}</h2>
