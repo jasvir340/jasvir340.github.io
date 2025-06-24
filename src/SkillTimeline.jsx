@@ -1,6 +1,7 @@
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { FaStar } from 'react-icons/fa6';
+import PropTypes from 'prop-types';
 
 function SkillTimeline({ skills }) {
   // Flatten the categorized skills into a simple array
@@ -26,5 +27,19 @@ function SkillTimeline({ skills }) {
     </div>
   );
 }
+
+SkillTimeline.propTypes = {
+  skills: PropTypes.arrayOf(
+    PropTypes.shape({
+      category: PropTypes.string.isRequired,
+      skills: PropTypes.arrayOf(
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          icon: PropTypes.node,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+};
 
 export default SkillTimeline;
