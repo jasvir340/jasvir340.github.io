@@ -1,4 +1,5 @@
 import './App.css'
+import SkillTimeline from './SkillTimeline.jsx'
 import {
   FaJava,
   FaDatabase,
@@ -141,6 +142,7 @@ function App() {
           </div>
         </div>
       ))}
+      <SkillTimeline skills={categorizedSkills} />
     </div>
   )
 }
