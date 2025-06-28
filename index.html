@@ -2,12 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jasvir Singh Dhillon</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Helvetica, Arial, sans-serif;
+        color: #fff;
+        background: radial-gradient(circle at 50% 50%, #ff7e5f, #feb47b);
+        transition: background-position 0.1s ease;
+      }
+      a {
+        color: #fff;
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div class="content">
+      <h1>Jasvir Singh Dhillon</h1>
+      <p>
+        <a href="https://www.linkedin.com/in/jasvir-singh-dhillon/" target="_blank" rel="noopener noreferrer">
+          LinkedIn
+        </a>
+      </p>
+    </div>
+    <script>
+      document.addEventListener('mousemove', function (e) {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.background = `radial-gradient(circle at ${x}% ${y}%, #ff7e5f, #feb47b)`;
+      });
+    </script>
   </body>
 </html>
