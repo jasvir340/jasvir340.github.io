@@ -1,91 +1,274 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jasvir Singh Dhillon</title>
-    <style>
-      body {
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        font-family: Helvetica, Arial, sans-serif;
-        color: #fff;
-        background: #000;
-        overflow: hidden;
-      }
-      a {
-        color: #fff;
-        text-decoration: underline;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-      }
-      #lightning {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="lightning"></canvas>
-    <div class="content">
-      <h1>Jasvir Singh Dhillon</h1>
-      <p>
-        <a href="https://www.linkedin.com/in/jasvir-singh-dhillon/" target="_blank" rel="noopener noreferrer">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-            <path d="M22.23 0H1.77A1.77 1.77 0 0 0 0 1.77v20.46A1.77 1.77 0 0 0 1.77 24h20.46A1.77 1.77 0 0 0 24 22.23V1.77A1.77 1.77 0 0 0 22.23 0ZM7.12 20.45H3.56V9h3.56Zm-1.78-13a2.06 2.06 0 1 1 2.06-2.06 2.06 2.06 0 0 1-2.06 2.06ZM20.45 20.45h-3.56v-5.57c0-1.33 0-3-1.85-3s-2.14 1.45-2.14 2.94v5.63h-3.56V9h3.42v1.55h.05a3.75 3.75 0 0 1 3.39-1.86c3.63 0 4.3 2.39 4.3 5.5Z"/>
-          </svg>
-        </a>
-      </p>
-    </div>
-    <script>
-      const canvas = document.getElementById('lightning');
-      const ctx = canvas.getContext('2d');
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      let prev = null;
-      document.addEventListener('mousemove', (e) => {
-        if (prev) drawLightning(prev.x, prev.y, e.clientX, e.clientY);
-        prev = { x: e.clientX, y: e.clientY };
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jasvir Singh Dhillon — Portfolio</title>
+  <meta name="description" content="Jasvir Singh Dhillon • Software Engineer • Backend, LLM evaluation, scalable systems" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #111317;
+      --text: #e8eaf0;
+      --muted: #a3a9b7;
+      --accent: #7dd3fc;
+      --accent-2: #a78bfa;
+      --chip: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .theme-light {
+      --bg: #ffffff;
+      --panel: #f6f7fb;
+      --text: #0b0c10;
+      --muted: #495063;
+      --accent: #2563eb;
+      --accent-2: #14b8a6;
+      --chip: rgba(0,0,0,0.06);
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(125,211,252,.1), transparent 60%),
+                  radial-gradient(800px 500px at 110% 10%, rgba(167,139,250,.15), transparent 60%),
+                  var(--bg);
+      transition: background .5s ease, color .3s ease;
+      overflow-x: hidden;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline wavy; }
+    header { position: fixed; inset: 0 0 auto 0; height: 64px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 40; }
+    .nav { width: min(1100px, 92vw); display: flex; align-items: center; justify-content: space-between; background: color-mix(in oklab, var(--panel) 88%, transparent); border: 1px solid var(--border); border-radius: 16px; padding: 10px 14px; box-shadow: var(--shadow); pointer-events: auto; backdrop-filter: blur(10px); }
+    .brand { font-weight: 800; letter-spacing: .5px; }
+    .brand small { font-weight: 600; color: var(--muted); }
+    .controls { display: flex; gap: 8px; align-items: center; }
+    .btn { appearance: none; border: 1px solid var(--border); background: var(--chip); color: var(--text); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-weight: 600; display: inline-flex; gap: 8px; align-items: center; transition: transform .1s ease, background .2s ease, border .2s ease; }
+    .btn:hover { transform: translateY(-1px); }
+    .hero { position: relative; min-height: 92vh; display: grid; place-items: center; text-align: center; overflow: hidden; }
+    .hero-inner { position: relative; z-index: 2; width: min(1100px, 92vw); }
+    .kicker { color: var(--muted); font-weight: 700; letter-spacing: .2em; text-transform: uppercase; font-size: .8rem; }
+    h1 { font-size: clamp(2.2rem, 5vw, 4.2rem); line-height: 1.05; margin: 10px 0 14px; }
+    .subtitle { color: var(--muted); font-size: clamp(1rem, 2.4vw, 1.2rem); }
+    .actions { margin-top: 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-parallax { position: absolute; inset: -10vh -10vw; z-index: 1; pointer-events: none; }
+    .layer { position: absolute; will-change: transform; filter: drop-shadow(0 6px 14px rgba(0,0,0,.25)); }
+    .glow { position: absolute; inset: 0; background: radial-gradient(700px 400px at 20% 30%, color-mix(in oklab, var(--accent) 35%, transparent), transparent 60%), radial-gradient(600px 360px at 80% 20%, color-mix(in oklab, var(--accent-2) 35%, transparent), transparent 60%); opacity: .5; }
+    .blob { width: 64vmin; height: 64vmin; border-radius: 50%; background: radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--accent) 55%, transparent) 0 40%, transparent 65%), radial-gradient(circle at 70% 70%, color-mix(in oklab, var(--accent-2) 60%, transparent) 0 35%, transparent 65%); mix-blend-mode: screen; opacity: .5; animation: float 14s ease-in-out infinite; }
+    .blob.one { top: 10%; left: 6%; filter: blur(2px); }
+    .blob.two { bottom: 0%; right: 8%; animation-duration: 18s; filter: blur(1px); }
+    .ring { width: 48vmin; height: 48vmin; border-radius: 50%; border: 2px dashed color-mix(in oklab, var(--accent) 60%, transparent); top: 6%; right: 10%; opacity: .8; animation: spin 36s linear infinite; }
+    .ring::after { content: ""; position: absolute; inset: 12%; border-radius: 50%; border: 2px dashed color-mix(in oklab, var(--accent-2) 60%, transparent); animation: spin 22s linear reverse infinite; }
+    @keyframes float { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-18px) } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    section { width: min(1100px, 92vw); margin: 10vh auto; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); padding: clamp(16px, 3vw, 28px); }
+    .section-title { font-size: clamp(1.5rem, 2.4vw, 2rem); margin: 0 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+    .span-12 { grid-column: span 12; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    @media (max-width: 900px) { .span-6 { grid-column: span 12; } .span-4 { grid-column: span 12; } }
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { padding: 10px 12px; border-radius: 999px; background: var(--chip); border: 1px solid var(--border); font-weight: 600; letter-spacing: .2px; font-size: .95rem; transform: translateY(6px); transition: transform .4s cubic-bezier(.2,.8,.2,1), background .2s ease; }
+    .chip:hover { transform: translateY(0); background: color-mix(in oklab, var(--chip) 80%, var(--accent) 20%); }
+    .highlight { position: relative; overflow: hidden; }
+    .highlight h3 { margin: 0 0 6px; }
+    .highlight p { margin: 0; color: var(--muted); }
+    .highlight .badge { position: absolute; top: 14px; right: 14px; background: color-mix(in oklab, var(--accent) 30%, var(--chip)); border: 1px solid var(--border); padding: 6px 10px; border-radius: 999px; font-size: .8rem; font-weight: 800; }
+    .reveal { opacity: 0; transform: translateY(18px) scale(.98); filter: blur(2px); }
+    .reveal.in { opacity: 1; transform: none; filter: none; transition: opacity .7s ease, transform .7s ease, filter .7s ease; }
+    footer { text-align: center; color: var(--muted); margin: 10vh 0 6vh; }
+    @media (prefers-reduced-motion: reduce) { .layer, .blob, .ring, .chip, .reveal { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav card">
+      <div class="brand">Jasvir Singh Dhillon <small>• Software Engineer</small></div>
+      <div class="controls">
+        <a class="btn" href="#contact" aria-label="Skip to contact">Contact</a>
+        <button id="themeToggle" class="btn" aria-label="Toggle theme" title="Toggle black / white mode">🌓 Theme</button>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" aria-label="Intro">
+      <div class="hero-inner">
+        <div class="kicker reveal">Backend • LLM Evaluation • Scalable Systems</div>
+        <h1 class="reveal" style="transition-delay: .05s">Building reliable, high‑performance systems with data and AI</h1>
+        <p class="subtitle reveal" style="transition-delay: .1s">I design and ship systems that scale — from evaluation pipelines for conversational AI to backend services that move the metrics.</p>
+        <div class="actions reveal" style="transition-delay: .15s">
+          <a class="btn" href="#skills">View Skills</a>
+          <a class="btn" href="#highlights">Impact Highlights</a>
+          <a class="btn" target="_blank" rel="noopener" href="mailto:jasvirdhillon340@gmail.com">Email Me</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://www.linkedin.com/in/jasvir-singh-dhillon/">LinkedIn</a>
+        </div>
+      </div>
+      <div class="hero-parallax" id="heroParallax" aria-hidden="true">
+        <div class="glow layer" data-depth="0.03"></div>
+        <div class="blob layer one" data-depth="0.1"></div>
+        <div class="ring layer" data-depth="0.04"></div>
+        <div class="blob layer two" data-depth="0.16"></div>
+      </div>
+    </section>
+    <section id="skills" class="card reveal" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="section-title">Skills</h2>
+      <div class="grid">
+        <div class="span-6">
+          <h3>Backend & Core</h3>
+          <div class="chips">
+            <span class="chip">Java</span>
+            <span class="chip">Python</span>
+            <span class="chip">Scala</span>
+            <span class="chip">Spring</span>
+            <span class="chip">Quarkus</span>
+            <span class="chip">FastAPI</span>
+            <span class="chip">Temporal</span>
+            <span class="chip">Kafka</span>
+            <span class="chip">Docker</span>
+          </div>
+        </div>
+        <div class="span-6">
+          <h3>Databases</h3>
+          <div class="chips">
+            <span class="chip">MySQL</span>
+            <span class="chip">PostgreSQL</span>
+            <span class="chip">MongoDB</span>
+            <span class="chip">Cassandra</span>
+            <span class="chip">Aerospike</span>
+            <span class="chip">Qdrant (Vector DB)</span>
+            <span class="chip">Avro</span>
+            <span class="chip">ProtoBuf</span>
+          </div>
+        </div>
+        <div class="span-6">
+          <h3>AI & LLM</h3>
+          <div class="chips">
+            <span class="chip">LangChain</span>
+            <span class="chip">LangGraph</span>
+            <span class="chip">Autogen</span>
+            <span class="chip">AG2</span>
+            <span class="chip">CrewAI</span>
+            <span class="chip">Agno</span>
+            <span class="chip">LLM Evaluation</span>
+            <span class="chip">Langfuse</span>
+            <span class="chip">PromptFlow</span>
+          </div>
+        </div>
+        <div class="span-6">
+          <h3>Cloud, Test & Observability</h3>
+          <div class="chips">
+            <span class="chip">AWS</span>
+            <span class="chip">GCP</span>
+            <span class="chip">Azure</span>
+            <span class="chip">JUnit</span>
+            <span class="chip">JMeter</span>
+            <span class="chip">Grafana</span>
+            <span class="chip">Scalyr</span>
+            <span class="chip">Oracle Flight Recorder</span>
+            <span class="chip">Git</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="highlights" class="reveal" aria-labelledby="highlights-title">
+      <h2 id="highlights-title" class="section-title">Impact Highlights</h2>
+      <div class="grid">
+        <article class="card highlight span-6">
+          <span class="badge">Eval platform</span>
+          <h3>LLM Simulation & Evaluation</h3>
+          <p>Human‑like simulator and scoring framework integrated with Google, Microsoft & Confident AI for safe, reliable releases.</p>
+        </article>
+      </div>
+    </section>
+    <section id="experience" class="card reveal" aria-labelledby="exp-title">
+      <h2 id="exp-title" class="section-title">Experience</h2>
+      <div class="grid">
+        <div class="span-12">
+          <h3>Senior Software Engineer II — MakeMyTrip (May 2022 – Present)</h3>
+          <p class="subtitle">Evaluations for AI agents, backend services, unified logging & measurement, and growth features.</p>
+        </div>
+        <div class="span-12">
+          <h3>Software Engineer — Syncron (Nov 2021 – May 2022)</h3>
+          <p class="subtitle">Pricing optimization, ML integrations, and event‑driven tasks to accelerate workflows.</p>
+        </div>
+        <div class="span-12">
+          <h3>Technical Consultant I — HighRadius (May 2019 – Nov 2021)</h3>
+          <p class="subtitle">SaaS accounts receivable, ERP payment posting automation, and bespoke solutions for Fortune 100 clients.</p>
+        </div>
+      </div>
+    </section>
+    <section id="contact" class="reveal" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="section-title">Let’s build something great</h2>
+      <div class="card grid">
+        <div class="span-6">
+          <p>Exploring backend/platform roles that combine systems thinking, product sense, and LLM evaluation to drive measurable impact—with a focus on building agents and other GenAI applications.
+.</p>
+          <p>Based in Gurugram, India • Available for remote/hybrid.</p>
+        </div>
+        <div class="span-6">
+          <p><strong>Email:</strong> <a href="mailto:jasvirdhillon340@gmail.com">jasvirdhillon340@gmail.com</a></p>
+          <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/jasvir-singh-dhillon/" target="_blank" rel="noopener">/in/jasvir-singh-dhillon</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    © <span id="year"></span> Jasvir Singh Dhillon
+  </footer>
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const key = 'theme';
+    function applyTheme(t){
+      if(t === 'light') document.body.classList.add('theme-light');
+      else document.body.classList.remove('theme-light');
+      localStorage.setItem(key, t);
+      toggle.textContent = t === 'light' ? '🌙 Dark' : '🔆 Light';
+      toggle.setAttribute('aria-label', 'Toggle theme to ' + (t === 'light' ? 'dark' : 'light'));
+      toggle.setAttribute('title', 'Toggle black / white mode');
+    }
+    const initial = localStorage.getItem(key) || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    applyTheme(initial);
+    toggle.addEventListener('click', () => applyTheme(document.body.classList.contains('theme-light') ? 'dark' : 'light'));
+    const layers = Array.from(document.querySelectorAll('#heroParallax .layer'));
+    function parallax(xRatio = 0.5, yRatio = 0.5){
+      const scrollY = window.scrollY || window.pageYOffset;
+      layers.forEach(el => {
+        const depth = parseFloat(el.dataset.depth || 0.1);
+        const tx = (xRatio - .5) * depth * 60;
+        const ty = scrollY * depth * 0.25 + (yRatio - .5) * depth * 40;
+        el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
       });
-
-      function drawLightning(x1, y1, x2, y2) {
-        const segments = 20;
-        const amplitude = 20;
-        ctx.strokeStyle = 'rgba(173,216,255,0.8)';
-        ctx.lineWidth = 2;
-        ctx.shadowColor = '#9df';
-        ctx.shadowBlur = 15;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        for (let i = 1; i < segments; i++) {
-          const t = i / segments;
-          const x = x1 + (x2 - x1) * t + (Math.random() - 0.5) * amplitude;
-          const y = y1 + (y2 - y1) * t + (Math.random() - 0.5) * amplitude;
-          ctx.lineTo(x, y);
+    }
+    let lastX = 0.5, lastY = 0.5, raf;
+    document.addEventListener('scroll', () => parallax(lastX, lastY), { passive: true });
+    function onPointer(e){
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      lastX = x / innerWidth; lastY = y / innerHeight;
+      if(!raf){ raf = requestAnimationFrame(() => { parallax(lastX, lastY); raf = null; }); }
+    }
+    window.addEventListener('mousemove', onPointer, { passive: true });
+    window.addEventListener('touchmove', onPointer, { passive: true });
+    parallax();
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
         }
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
       }
-
-      function fade() {
-        ctx.fillStyle = 'rgba(0,0,0,0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        requestAnimationFrame(fade);
-      }
-      fade();
-    </script>
-  </body>
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
